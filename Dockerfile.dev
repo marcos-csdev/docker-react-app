@@ -1,0 +1,16 @@
+FROM node:16-alpine
+
+#the USER which will execute RUN, CMD, or ENTRYPOINT instructions will be the node user, as opposed to root (default).
+USER node
+
+#prevents permissions issue since WORKDIR by default will create a directory if it does not exist and set ownership to root
+RUN mkdir -p /home/node/app
+WORKDIR /home/node/app
+
+#set ownership of the files being copied from local environment to the node user in the container
+COPY --chown=node:node ./package.json ./
+RUN npm install
+
+COPY --chown=node:node ./ ./
+
+CMD ["npm", "start"]
