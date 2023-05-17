@@ -7,8 +7,17 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
+    container_name: frontend
     volumes:
       #do not attempt to map a folder against node_modules inside the container
       - /home/node/app/node_modules
       #map the project folder outside the container into the /app folder inside the container 
       - .:/home/node/app
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app
+    command: [ "npm", "run", "test" ]
